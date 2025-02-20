@@ -1,3 +1,17 @@
+"""
+Federated Soft Actor-Critic (FedSAC) Implementation for RIS-assisted UAV Communication Systems
+
+This module implements a federated learning framework using the Soft Actor-Critic (SAC) algorithm
+for optimizing RIS-assisted UAV communication systems. It supports both traditional federated
+averaging (FedAvg) and best model selection strategies.
+
+Key Features:
+- Multi-agent federated learning with SAC
+- Model aggregation using FedAvg or best model selection
+- Performance tracking and logging
+- Distributed training support
+"""
+
 import torch
 from RL_BRAIN_SAC import SAC
 import numpy as np
@@ -11,10 +25,24 @@ import os
 import argparse
 
 def train_model(model_id):
+    """
+    Train a local model with the specified ID.
+    
+    Args:
+        model_id (int): Identifier for the local model/agent
+    """
     subprocess.run(['python', 'RIS_UAV_MAIN_SAC.py', str(model_id), 'True'])
 
 def average_weights(w):
-    """返回权重的平均值"""
+    """
+    Compute the average of model weights.
+    
+    Args:
+        w (list): List of model state dictionaries
+        
+    Returns:
+        dict: Averaged model weights
+    """
     w_avg = copy.deepcopy(w[0])
     for key in w_avg.keys():
         for i in range(1, len(w)):
@@ -23,7 +51,15 @@ def average_weights(w):
     return w_avg
 
 def fed_avg(weights_list):
-    """传统的联邦平均方法"""
+    """
+    Implement traditional federated averaging method.
+    
+    Args:
+        weights_list (list): List of weights from all local models
+        
+    Returns:
+        list: Averaged weights for actor and critic networks
+    """
     if weights_list is None:
         print("Error: No valid weights list provided")
         return None
@@ -44,7 +80,17 @@ def fed_avg(weights_list):
     return [avg_actor, avg_critic1, avg_critic2]
 
 def get_best_model(weights_list, M, round_num):
-    """基于性能选择最佳模型的方法"""
+    """
+    Select the best performing model based on average reward.
+    
+    Args:
+        weights_list (list): List of weights from all local models
+        M (int): Number of agents/models
+        round_num (int): Current federation round number
+        
+    Returns:
+        list: Weights of the best performing model
+    """
     if weights_list is None:
         print("Error: No valid weights list provided")
         return None
@@ -54,19 +100,19 @@ def get_best_model(weights_list, M, round_num):
     
     print(f"\nEvaluating models for round {round_num}:")
     
-    # 记录所有进程的奖励到global_reward.csv
+    # Record rewards for all processes in global_reward.csv
     for i in range(M):
         try:
             with open(f'sac_train_reward_{i}.csv', 'r') as f:
                 reader = csv.reader(f)
                 rewards = list(reader)
-                # 记录所有奖励
+                # Record all rewards
                 for row in rewards:
                     with open('global_reward.csv', 'a+', newline='') as global_f:
                         writer = csv.writer(global_f)
                         writer.writerow([int(row[1]) + round_num * 20, float(row[2])])
                 
-                # 计算平均奖励用于选择最佳模型
+                # Calculate average reward for best model selection
                 if len(rewards) >= 20:
                     recent_rewards = [float(row[2]) for row in rewards[-20:]]
                     avg_reward = sum(recent_rewards) / 20
@@ -81,7 +127,7 @@ def get_best_model(weights_list, M, round_num):
     
     print(f"\nSelected agent {best_model_idx} as best model with average reward {best_reward}")
     
-    # 清理临时文件
+    # Cleanup temporary files
     for i in range(M):
         try:
             os.remove(f'sac_train_reward_{i}.csv')
@@ -91,6 +137,15 @@ def get_best_model(weights_list, M, round_num):
     return weights_list[best_model_idx]
 
 def save_local_models(M):
+    """
+    Load and save weights from all local models.
+    
+    Args:
+        M (int): Number of agents/models
+        
+    Returns:
+        list: List of weights from all local models
+    """
     print("Loading local models...")
     weights_list = []
     for i in range(M):
@@ -107,6 +162,12 @@ def save_local_models(M):
     return weights_list
 
 def start_local_processes(M):
+    """
+    Start training processes for all local models.
+    
+    Args:
+        M (int): Number of agents/models to train
+    """
     processes = []
     for i in range(M):
         p = Process(target=train_model, args=(i,))
@@ -117,30 +178,39 @@ def start_local_processes(M):
         p.join()
 
 def fedrateLearning(FedNum, FedRound, start_time, strategy='best_model'):
+    """
+    Main federated learning loop implementation.
+    
+    Args:
+        FedNum (int): Number of federated learning agents
+        FedRound (int): Number of federation rounds
+        start_time (float): Start time of training
+        strategy (str): Federation strategy ('fed_avg' or 'best_model')
+    """
     print(f"\nInitializing federated learning with strategy: {strategy}")
     
-    # 确保global_reward.csv存在并清空
+    # Initialize/clear global reward tracking file
     with open('global_reward.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['Episode', 'Reward'])
     
-    # 初始化全局模型
+    # Initialize global model
     print("Training initial model...")
     main_SAC(0, False, 20)
         
     for i in range(FedRound):
         print(f"\nStarting Fed Learning Round: {i}")
         
-        # 启动所有子进程进行训练
+        # Start all local training processes
         start_local_processes(FedNum)
         
-        # 获取所有本地模型的权重
+        # Get weights from all local models
         weights_list = save_local_models(FedNum)
         if weights_list is None:
             print(f"Error in round {i}: Could not load local models")
             continue
             
-        # 根据策略选择全局模型
+        # Select global model based on strategy
         if strategy == 'fed_avg':
             print("Using traditional federated averaging strategy")
             GlobalWeight = fed_avg(weights_list)
@@ -152,7 +222,7 @@ def fedrateLearning(FedNum, FedRound, start_time, strategy='best_model'):
             print(f"Error in round {i}: Could not update global model")
             continue
 
-        # 保存全局模型权重供下一轮使用
+        # Save global model weights for next round
         print(f"\nSaving global model for round {i}...")
         torch.save(GlobalWeight[0], 'global_model_actor_weight2.pth')
         torch.save(GlobalWeight[1], 'global_model_critic1_weight2.pth')
@@ -187,12 +257,13 @@ if __name__ == '__main__':
     with open('fedsacTime.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([args.fed_num * args.fed_round * args.episode, elapsed_time])
-        
-# # 使用最佳模型选择策略（默认）
-# python fedsac.py --strategy best_model
 
-# # 使用传统联邦平均策略
-# python fedsac.py --strategy fed_avg
+# Usage examples:
+# 1. Run with best model selection strategy (default):
+#    python fedsac.py --strategy best_model
 
-# # 可以同时设置其他参数
-# python fedsac.py --strategy fed_avg --fed_num 8 --fed_round 15 --episode 30
+# 2. Run with traditional federated averaging:
+#    python fedsac.py --strategy fed_avg
+
+# 3. Run with custom parameters:
+#    python fedsac.py --strategy fed_avg --fed_num 8 --fed_round 15 --episode 30

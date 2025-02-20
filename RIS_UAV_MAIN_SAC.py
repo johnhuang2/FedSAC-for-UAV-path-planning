@@ -14,15 +14,15 @@ def smooth(data, window_size=51, poly_order=3):
     return savgol_filter(data, window_size, poly_order)
 
 def record_reward(id, ep, reward, is_global=False):
-    """记录奖励到CSV文件"""
+    """Record reward to CSV file"""
     if is_global:
         with open('global_reward.csv', 'a+', newline='') as f:
             f_csv = csv.writer(f)
-            f_csv.writerow([ep, reward])
+            f_csv.writerow([ep, reward/100])
     else:
         with open(f'sac_train_reward_{id}.csv', 'a+', newline='') as f:
             f_csv = csv.writer(f)
-            f_csv.writerow([id, ep, reward])
+            f_csv.writerow([id, ep, reward/100])
 
 def train(RL, id, Episodes, env, UAV_trajectory, GT_schedule, UAV_flight_time, slots):
     total = 0
@@ -51,12 +51,12 @@ def train(RL, id, Episodes, env, UAV_trajectory, GT_schedule, UAV_flight_time, s
 
         RL.learn()
         
-        # 记录reward到两个文件
+        # Record reward to both files
         record_reward(id, ep, total_reward)
         record_reward(id, ep, total_reward, is_global=True)
         
         total_rewards.append(total_reward)
-        print(f"Agent {id} - Finish episode {ep} with reward {total_reward}")
+        print(f"Agent {id} - Finish episode {ep} with reward {total_reward/100}")
 
         UAV_trajectory[ep, :] = env.UAV_FLY(UAV_trajectory[ep, :], slots[0, ep])
     
