@@ -29,9 +29,9 @@ python fedsac.py --strategy fed_avg --fed_num 8 --fed_round 15 --episode 30
 
 For detailed information about the methodology and technical approach, please refer to our paper:
 
-https://ieeexplore.ieee.org/document/10900454 <be>
+https://ieeexplore.ieee.org/document/10900454 <br>
 
-<h>BibTex<h>
+**BibTex**
 <div class="bibtex-container">
 @ARTICLE{10900454,<br>
 &nbsp;&nbsp;author={Huang, Jun and Wu, Beining and Duan, Qiang and Dong, Liang and Yu, Shui},<br>
