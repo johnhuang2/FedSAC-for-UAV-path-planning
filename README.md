@@ -29,15 +29,19 @@ python fedsac.py --strategy fed_avg --fed_num 8 --fed_round 15 --episode 30
 
 For detailed information about the methodology and technical approach, please refer to our paper:
 
-@ARTICLE{Huang2025TMC,
-  author={Huang, Jun and Wu, Beining and Duan, Qiang and Dong, Liang and Yu, Shui},
-  journal={IEEE Transactions on Mobile Computing}, 
-  title={{A Fast UAV Trajectory Planning Framework in RIS-assisted Communication Systems with Accelerated Learning via Multithreading and Federating}}, 
-  year={2025},
-  volume={},
-  number={},
-  pages={1-16},
-  doi={10.1109/TMC.2025.3544903}}
+<div class="bibtex-container">
+@ARTICLE{10900454,<br>
+&nbsp;&nbsp;author={Huang, Jun and Wu, Beining and Duan, Qiang and Dong, Liang and Yu, Shui},<br>
+&nbsp;&nbsp;journal={IEEE Transactions on Mobile Computing},<br>
+&nbsp;&nbsp;title={A Fast UAV Trajectory Planning Framework in RIS-assisted Communication Systems with Accelerated Learning via Multithreading and Federating},<br>
+&nbsp;&nbsp;year={2025},<br>
+&nbsp;&nbsp;volume={},<br>
+&nbsp;&nbsp;number={},<br>
+&nbsp;&nbsp;pages={1-16},<br>
+&nbsp;&nbsp;keywords={Autonomous aerial vehicles; Trajectory planning; Trajectory; Training; Mobile computing; Optimization; Reconfigurable intelligent surfaces; Quadrotors; Planning; Heuristic algorithms; UAV; RIS; Trajectory planning; Reinforcement learning; Training acceleration; Federating},<br>
+&nbsp;&nbsp;doi={10.1109/TMC.2025.3544903}<br>
+}
+</div>
 
 ## Notes
 
