@@ -36,7 +36,7 @@ https://ieeexplore.ieee.org/document/10900454 <br>
 @ARTICLE{10900454,<br>
 &nbsp;&nbsp;author={Huang, Jun and Wu, Beining and Duan, Qiang and Dong, Liang and Yu, Shui},<br>
 &nbsp;&nbsp;journal={IEEE Transactions on Mobile Computing},<br>
-&nbsp;&nbsp;title={A Fast UAV Trajectory Planning Framework in RIS-assisted Communication Systems with Accelerated Learning via Multithreading and Federating},<br>
+&nbsp;&nbsp;title={{A Fast UAV Trajectory Planning Framework in RIS-assisted Communication Systems with Accelerated Learning via Multithreading and Federating}},<br>
 &nbsp;&nbsp;year={2025},<br>
 &nbsp;&nbsp;volume={},<br>
 &nbsp;&nbsp;number={},<br>
