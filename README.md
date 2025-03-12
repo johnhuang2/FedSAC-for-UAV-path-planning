@@ -29,7 +29,15 @@ python fedsac.py --strategy fed_avg --fed_num 8 --fed_round 15 --episode 30
 
 For detailed information about the methodology and technical approach, please refer to our paper:
 
-[Paper citation placeholder]
+@ARTICLE{Huang2025TMC,
+  author={Huang, Jun and Wu, Beining and Duan, Qiang and Dong, Liang and Yu, Shui},
+  journal={IEEE Transactions on Mobile Computing}, 
+  title={{A Fast UAV Trajectory Planning Framework in RIS-assisted Communication Systems with Accelerated Learning via Multithreading and Federating}}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-16},
+  doi={10.1109/TMC.2025.3544903}}
 
 ## Notes
 
