@@ -29,6 +29,8 @@ python fedsac.py --strategy fed_avg --fed_num 8 --fed_round 15 --episode 30
 
 For detailed information about the methodology and technical approach, please refer to our paper:
 
+https://ieeexplore.ieee.org/document/10900454 <br>
+
 <div class="bibtex-container">
 @ARTICLE{10900454,<br>
 &nbsp;&nbsp;author={Huang, Jun and Wu, Beining and Duan, Qiang and Dong, Liang and Yu, Shui},<br>
@@ -38,7 +40,6 @@ For detailed information about the methodology and technical approach, please re
 &nbsp;&nbsp;volume={},<br>
 &nbsp;&nbsp;number={},<br>
 &nbsp;&nbsp;pages={1-16},<br>
-&nbsp;&nbsp;keywords={Autonomous aerial vehicles; Trajectory planning; Trajectory; Training; Mobile computing; Optimization; Reconfigurable intelligent surfaces; Quadrotors; Planning; Heuristic algorithms; UAV; RIS; Trajectory planning; Reinforcement learning; Training acceleration; Federating},<br>
 &nbsp;&nbsp;doi={10.1109/TMC.2025.3544903}<br>
 }
 </div>
